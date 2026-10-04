@@ -11,6 +11,8 @@ export default defineConfig({
   // Load the rules from source, so linting doesn't need a build first. Not via
   // `extends`: oxlint rejects relative plugin paths in extended configs.
   jsPlugins: ["./src/index.ts"],
+  // A top-level `plugins` replaces Oxlint's defaults, so list them with the preset's `import`.
+  plugins: ["eslint", "typescript", "unicorn", "oxc", "import"],
   rules: deslopify.configs.opinionated.rules,
   options: {
     typeAware: true,

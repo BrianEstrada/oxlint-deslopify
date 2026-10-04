@@ -18,6 +18,12 @@ void it("opinionated keeps every recommended rule and adds built-in ones", () =>
     ...recommended.rules,
   });
   assert.deepEqual(opinionated.rules?.curly, ["error", "all"]);
+  assert.equal(opinionated.rules?.["typescript/no-explicit-any"], "error");
+});
+
+void it("opinionated enables the import plugin its import rules need", () => {
+  assert.equal(opinionated.rules?.["import/no-duplicates"], "error");
+  assert.deepEqual(opinionated.plugins, ["import"]);
 });
 
 void it("both presets load the plugin by package name", () => {

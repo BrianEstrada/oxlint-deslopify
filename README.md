@@ -66,20 +66,38 @@ Or load the plugin and pick rules yourself, in `oxlint.config.ts` or `.oxlintrc.
 
 ## What `opinionated` adds
 
-Besides the ✅ rules above, `configs.opinionated` sets these built-in Oxlint rules to `"error"`. They're style choices, not bugs, so `configs.recommended` leaves them off:
+Besides the ✅ rules above, `configs.opinionated` sets these built-in Oxlint rules to `"error"`, and turns on Oxlint's `import` plugin for the `import/*` ones. `configs.recommended` leaves them off.
 
-| Rule                                     | Setting       | Why                                                                          |
-| ---------------------------------------- | ------------- | ---------------------------------------------------------------------------- |
-| `func-style`                             | `declaration` | Named functions are `function` declarations, not arrows assigned to a const. |
-| `object-shorthand`                       | `never`       | `{ key: key }` and `key: function () {}`, never the shorthand.               |
-| `curly`                                  | `all`         | Braces on every block body, so extending one is a clean diff.                |
-| `arrow-body-style`                       | `always`      | Arrow functions get a block body and an explicit `return`.                   |
-| `typescript/consistent-type-definitions` | `interface`   | Object types are interfaces, not type aliases.                               |
-| `typescript/no-deprecated`               | type-aware    | Flags `@deprecated` APIs, which `tsc` never reports.                         |
-| `typescript/no-unsafe-type-assertion`    | type-aware    | Unchecked casts let unvalidated data through.                                |
-| `typescript/no-unsafe-assignment`        | type-aware    | Stops `any` spreading into typed variables.                                  |
-| `typescript/no-unsafe-member-access`     | type-aware    | Stops property access on `any`.                                              |
-| `typescript/no-unsafe-argument`          | type-aware    | Stops `any` being passed as a typed argument.                                |
+### Slop
+
+Rules against what agents get wrong: `any`, unchecked casts, dead code.
+
+| Rule                                    | Setting                              | Why                                                                           |
+| --------------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------- |
+| `typescript/no-explicit-any`            |                                      | `any` turns type checking off. Use `unknown` and narrow it.                   |
+| `typescript/consistent-type-assertions` | `objectLiteralTypeAssertions: never` | `{ ... } as T` skips the excess-property check. Write `const x: T = { ... }`. |
+| `no-nested-ternary`                     |                                      | Catches the one-line `a ? b : c ? d : e` that `simple-ternary` allows.        |
+| `no-unused-vars`                        | `args`, `caughtErrors: all`          | Unused parameters and swallowed errors, unless prefixed with `_`.             |
+| `typescript/no-deprecated`              | type-aware                           | Flags `@deprecated` APIs, which `tsc` never reports.                          |
+| `typescript/no-unsafe-type-assertion`   | type-aware                           | Unchecked casts let unvalidated data through.                                 |
+| `typescript/no-unsafe-assignment`       | type-aware                           | Stops `any` spreading into typed variables.                                   |
+| `typescript/no-unsafe-member-access`    | type-aware                           | Stops property access on `any`.                                               |
+| `typescript/no-unsafe-argument`         | type-aware                           | Stops `any` being passed as a typed argument.                                 |
+
+### Tidiness
+
+Style choices, not bugs: each picks one way to write the same code.
+
+| Rule                                     | Setting            | Why                                                                          |
+| ---------------------------------------- | ------------------ | ---------------------------------------------------------------------------- |
+| `func-style`                             | `declaration`      | Named functions are `function` declarations, not arrows assigned to a const. |
+| `object-shorthand`                       | `never`            | `{ key: key }` and `key: function () {}`, never the shorthand.               |
+| `curly`                                  | `all`              | Braces on every block body, so extending one is a clean diff.                |
+| `arrow-body-style`                       | `always`           | Arrow functions get a block body and an explicit `return`.                   |
+| `typescript/consistent-type-definitions` | `interface`        | Object types are interfaces, not type aliases.                               |
+| `typescript/consistent-type-imports`     | `type-imports`     | Type-only imports use `import type`.                                         |
+| `import/no-duplicates`                   |                    | One import statement per module.                                             |
+| `import/consistent-type-specifier-style` | `prefer-top-level` | `import type { A }`, not `import { type A }`.                                |
 
 Override any of them in your own `rules` after `extends`.
 
