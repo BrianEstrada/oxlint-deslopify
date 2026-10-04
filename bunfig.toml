@@ -1,0 +1,4 @@
+# Docs: https://bun.com/docs/runtime/bunfig
+[install]
+# `bun add` saves exact versions ("1.2.3", not "^1.2.3").
+exact = true

@@ -1,0 +1,62 @@
+{
+  "name": "oxlint-plugin-deslopify",
+  "version": "0.1.0",
+  "description": "Oxlint rules that keep AI agents from writing sloppy code",
+  "keywords": [
+    "ai",
+    "eslint",
+    "eslint-plugin",
+    "eslintplugin",
+    "lint",
+    "oxlint",
+    "oxlint-plugin"
+  ],
+  "homepage": "https://github.com/BrianEstrada/oxlint-deslopify#readme",
+  "bugs": "https://github.com/BrianEstrada/oxlint-deslopify/issues",
+  "license": "MIT",
+  "author": "Brian Estrada",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrianEstrada/oxlint-deslopify.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "test": "node --test 'src/**/*.test.ts'",
+    "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test && bun run build",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {
+    "@oxlint/plugins": "^1.86.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
+    "@types/node": "26.6.4",
+    "lefthook": "2.1.16",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.86.0",
+    "oxlint-tsgolint": "7.0.2003",
+    "tsdown": "0.23.0",
+    "typescript": "7.0.2"
+  },
+  "peerDependencies": {
+    "oxlint": ">=1.86.0"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
