@@ -15,7 +15,7 @@ AGENTS.md strategy: this file is for coding agents, and it's loaded into every s
 - Run tests with `bun run test`, never `bun test`: oxlint's `RuleTester` refuses Bun, so tests run on Node.
 - A rule is `src/rules/<name>.ts` exporting a `CreateOnceRule`, plus `<name>.test.ts` beside it using `ruleTester` from `src/rules/rule-tester.ts`, plus `docs/rules/<name>.md`. Register it in `src/index.ts` and add it to the README's rules table.
 - Write `createOnce`, not `create`. It runs once per lint run, so keep no per-file state in its closure; reset any in a `before` hook.
-- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to `configs.recommended`; keep rules tied to one library or project `false`.
+- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to both `configs.recommended` and `configs.opinionated`; keep rules tied to one library or project `false`. Built-in Oxlint rules go only in `configs.opinionated`.
 - This package is public: rule messages and docs must not name any one project's helpers.
 
 ## Comments
@@ -41,4 +41,4 @@ Before writing or keeping a comment or JSDoc block, walk this:
 ## PRs
 
 - Title: a Conventional Commit, like the commit messages.
-- If you add a rule or change `configs.recommended`, update `README.md`.
+- If you add a rule or change a preset, update `README.md` and the preset line at the top of the rule's `docs/rules/<name>.md`.

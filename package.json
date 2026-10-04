@@ -37,7 +37,7 @@
     "lint:fix": "oxlint --fix",
     "test": "node --test 'src/**/*.test.ts'",
     "check": "bun run typecheck && bun run lint && bun run fmt:check && bun run test && bun run build",
-    "prepublishOnly": "bun run build"
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@oxlint/plugins": "^1.86.0"

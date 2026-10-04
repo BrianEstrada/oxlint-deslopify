@@ -2,19 +2,21 @@
 
 [Oxlint](https://oxc.rs/docs/guide/usage/linter) rules that keep AI agents from writing sloppy code.
 
-Agents follow a linter more reliably than a style guide in a prompt. This plugin turns the patterns they reach for (multi-line ternaries, one-line objects, `T["key"]` type lookups, unchecked casts) into lint errors, and ships a preset that pairs them with Oxlint's built-in rules for the same problems.
+Agents follow a linter more reliably than a style guide in a prompt. This plugin turns the patterns they reach for (multi-line ternaries, one-line objects, `T["key"]` type lookups, unchecked casts) into lint errors. It ships two presets: `recommended` turns on just this plugin's rules, and `opinionated` adds Oxlint built-in rules that push the same style further.
 
 ## Install
 
 ```sh
 bun add -d oxlint oxlint-plugin-deslopify
-# For the type-aware rules in the preset:
+# Only for the type-aware rules in `configs.opinionated`:
 bun add -d oxlint-tsgolint
 ```
 
 ## Usage
 
-Extend the recommended preset in `oxlint.config.ts`:
+Extend a preset in `oxlint.config.ts`.
+
+`configs.recommended` turns on this plugin's ✅ rules and nothing else:
 
 ```ts
 import { defineConfig } from "oxlint";
@@ -22,6 +24,17 @@ import deslopify from "oxlint-plugin-deslopify";
 
 export default defineConfig({
   extends: [deslopify.configs.recommended],
+});
+```
+
+`configs.opinionated` turns on the same rules plus [the built-in rules below](#what-opinionated-adds):
+
+```ts
+import { defineConfig } from "oxlint";
+import deslopify from "oxlint-plugin-deslopify";
+
+export default defineConfig({
+  extends: [deslopify.configs.opinionated],
   options: {
     // Without this, the preset's type-aware rules are skipped.
     typeAware: true,
@@ -42,7 +55,7 @@ Or load the plugin and pick rules yourself, in `oxlint.config.ts` or `.oxlintrc.
 
 ## Rules
 
-✅ in `configs.recommended` · 🔧 fixable with `--fix`
+✅ in `configs.recommended` and `configs.opinionated` · 🔧 fixable with `--fix`
 
 | Rule                                                               | Description                                                                         | ✅  | 🔧  |
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | --- | --- |
@@ -51,9 +64,9 @@ Or load the plugin and pick rules yourself, in `oxlint.config.ts` or `.oxlintrc.
 | [`no-property-type-lookup`](docs/rules/no-property-type-lookup.md) | Disallow looking up a property's type with `T["key"]`; name the type instead.       | ✅  |     |
 | [`simple-ternary`](docs/rules/simple-ternary.md)                   | Keep ternaries on one line, testing one condition, without interpolated strings.    | ✅  |     |
 
-## What the preset turns on
+## What `opinionated` adds
 
-Besides the ✅ rules above, `configs.recommended` sets these built-in Oxlint rules to `"error"`:
+Besides the ✅ rules above, `configs.opinionated` sets these built-in Oxlint rules to `"error"`. They're style choices, not bugs, so `configs.recommended` leaves them off:
 
 | Rule                                     | Setting       | Why                                                                          |
 | ---------------------------------------- | ------------- | ---------------------------------------------------------------------------- |

@@ -2,7 +2,7 @@
 
 Disallow looking up a property's type with `T["key"]`; name the type instead.
 
-✅ In `configs.recommended`.
+✅ In `configs.recommended` and `configs.opinionated`.
 
 ## Why
 
