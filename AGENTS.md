@@ -13,9 +13,9 @@ AGENTS.md strategy: this file is for coding agents, and it's loaded into every s
 
 - Use Bun to install and run scripts (`bun`, `bun run`, `bunx`), not npm. The one exception is `npm publish` in the release workflow.
 - Run tests with `bun run test`, never `bun test`: oxlint's `RuleTester` refuses Bun, so tests run on Node.
-- A rule is `src/rules/<name>.ts` exporting a `CreateOnceRule`, plus `<name>.test.ts` beside it using `ruleTester` from `src/rules/rule-tester.ts`, plus `docs/rules/<name>.md`. Register it in `src/index.ts` and add it to the README's rules table.
+- A rule is `src/rules/<name>.ts` exporting a `CreateOnceRule`, plus `<name>.test.ts` beside it using `ruleTester` from `src/rules/rule-tester.ts`, plus `docs/rules/<name>.md`. Register it in `src/rules.ts` and add it to the README's rules table.
 - Write `createOnce`, not `create`. It runs once per lint run, so keep no per-file state in its closure; reset any in a `before` hook.
-- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to both `configs.recommended` and `configs.opinionated`; keep rules tied to one library or project `false`. Built-in Oxlint rules go only in `configs.opinionated`.
+- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to both `configs.recommended` and `configs.opinionated`; keep rules tied to one library or project `false`. Built-in Oxlint rules go only in `configs.opinionated` (`src/opinionated.ts`).
 - This package is public: rule messages and docs must not name any one project's helpers.
 
 ## Comments
