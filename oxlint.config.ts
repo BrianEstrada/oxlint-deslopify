@@ -11,7 +11,7 @@ export default defineConfig({
   // Load the rules from source, so linting doesn't need a build first. Not via
   // `extends`: oxlint rejects relative plugin paths in extended configs.
   jsPlugins: ["./src/index.ts"],
-  rules: deslopify.configs.recommended.rules,
+  rules: deslopify.configs.opinionated.rules,
   options: {
     typeAware: true,
     // Backstop for any rule turned on later as "warn": warnings still fail lint.

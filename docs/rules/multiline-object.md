@@ -2,7 +2,7 @@
 
 Put each property of an object literal with two or more properties on its own line.
 
-✅ In `configs.recommended`. 🔧 Fixable with `--fix`.
+✅ In `configs.recommended` and `configs.opinionated`. 🔧 Fixable with `--fix`.
 
 ## Why
 

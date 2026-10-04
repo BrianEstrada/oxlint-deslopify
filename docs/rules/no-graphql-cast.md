@@ -2,7 +2,7 @@
 
 Require `graphql<unknown>` so GraphQL responses are parsed, not cast.
 
-Not in `configs.recommended`: turn it on in projects that call a `graphql()` client such as Octokit's.
+In neither preset: turn it on in projects that call a `graphql()` client such as Octokit's.
 
 ## Why
 

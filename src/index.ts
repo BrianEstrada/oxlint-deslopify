@@ -7,7 +7,10 @@ import { noPropertyTypeLookup } from "./rules/no-property-type-lookup.ts";
 import { simpleTernary } from "./rules/simple-ternary.ts";
 
 interface DeslopifyPlugin extends Plugin {
-  configs: { recommended: OxlintConfig };
+  configs: {
+    recommended: OxlintConfig;
+    opinionated: OxlintConfig;
+  };
 }
 
 const rules: Record<string, Rule> = {
@@ -28,6 +31,11 @@ const recommendedRules: Record<string, AllowWarnDeny> = Object.fromEntries(
 );
 
 const recommended: OxlintConfig = {
+  jsPlugins: ["oxlint-plugin-deslopify"],
+  rules: recommendedRules,
+};
+
+const opinionated: OxlintConfig = {
   jsPlugins: ["oxlint-plugin-deslopify"],
   rules: {
     ...recommendedRules,
@@ -59,7 +67,10 @@ const plugin: DeslopifyPlugin = {
     meta: { name: "oxlint-plugin-deslopify" },
     rules: rules,
   }),
-  configs: { recommended: recommended },
+  configs: {
+    recommended: recommended,
+    opinionated: opinionated,
+  },
 };
 
 // noinspection JSUnusedGlobalSymbols

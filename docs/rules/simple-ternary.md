@@ -2,7 +2,7 @@
 
 Keep ternaries on one line, testing one condition, without interpolated strings.
 
-✅ In `configs.recommended`.
+✅ In `configs.recommended` and `configs.opinionated`.
 
 ## Why
 
