@@ -1,6 +1,6 @@
 {
   "name": "oxlint-plugin-deslopify",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Oxlint rules that keep AI agents from writing sloppy code",
   "keywords": [
     "ai",
