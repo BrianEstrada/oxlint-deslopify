@@ -1,5 +1,6 @@
-# Cuts a release from main: bumps the version, updates CHANGELOG.md, commits and tags it,
-# publishes to npm and creates the GitHub Release. Run it from the Actions tab.
+# Cuts a release from main with the shared bun-npm-release workflow: bumps the version, updates
+# CHANGELOG.md, commits and tags it, publishes to npm and creates the GitHub Release.
+# Run it from the Actions tab.
 # npm trusted publishing (OIDC) matches this workflow by file name, so keep it `release.yml`.
 name: Release
 
@@ -7,13 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version to release, like 0.5.0. Leave empty to work it out from the commits.
+        description: Version to release, like 1.2.3. Leave empty to work it out from the commits.
         required: false
         type: string
 
 permissions:
-  # Push the release commit and tag, and create the GitHub Release.
-  contents: write
+  contents: read
   # OIDC token for npm trusted publishing and provenance.
   id-token: write
 
@@ -23,59 +23,9 @@ concurrency:
 
 jobs:
   release:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          # git-cliff reads every commit and tag since the last release.
-          fetch-depth: 0
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.4.3
-
-      # Trusted publishing needs npm 11.5.1 or later, which current LTS Node ships.
-      - uses: actions/setup-node@v7
-        with:
-          node-version: lts/*
-          registry-url: https://registry.npmjs.org
-
-      - run: bun install --frozen-lockfile
-
-      - id: version
-        uses: BrianEstrada/.github/git-cliff-version@4a23053ced2816db78af5015fd62b75aff614ecf # main
-        with:
-          version: ${{ inputs.version }}
-
-      - name: Bump package.json and update CHANGELOG.md
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          bun pm version "$VERSION" --no-git-tag-version
-          bun run changelog
-
-      - run: bun run check
-
-      # Atomic, so main and the tag move together or not at all.
-      - name: Commit and tag
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore(release): v$VERSION"
-          git tag "v$VERSION"
-          git push --atomic origin HEAD:main "v$VERSION"
-
-      - run: npm publish
-
-      # The notes are this version's CHANGELOG.md section, without its heading.
-      - name: Create the GitHub Release
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          awk '/^## /{ n++; next } n == 1' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
-          gh release create "v$VERSION" --title "v$VERSION" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+    uses: BrianEstrada/.github/.github/workflows/bun-npm-release.yml@a3365073142d6188b8e60334052183ae289b4ba3 # main
+    with:
+      version: ${{ inputs.version }}
+      app-client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
