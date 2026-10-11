@@ -1,0 +1,84 @@
+import { requireSafetyCommentForTypeAssertion } from "./require-safety-comment-for-type-assertion.ts";
+import { ruleTester } from "./rule-tester.ts";
+
+const error = {
+  messageId: "missing",
+  data: { marker: "SAFETY" },
+};
+
+ruleTester.run(
+  "require-safety-comment-for-type-assertion",
+  requireSafetyCommentForTypeAssertion,
+  {
+    valid: [
+      "const values = [1, 2] as const;",
+      "// SAFETY: The parser established the UserId invariant.\nconst id = (value as unknown) as UserId;",
+      "const value = <const>{ id: 'one' };",
+      "// SAFETY: The parser established the UserId invariant.\nconst id = value as UserId;",
+      "function parse(): UserId {\n// SAFETY: Validation above established the UserId invariant.\nreturn value as UserId;\n}",
+      "const id = /* SAFETY: Validation established the invariant. */ value as UserId;",
+      "// SAFETY: The parser established the exported UserId invariant.\nexport const id = value as UserId;",
+      "/* SAFETY:\n * The parser established the exported UserId invariant.\n */\nexport const id = value as UserId;",
+      {
+        code: "// INVARIANT: The caller parsed this value.\nconst value = input as User;",
+        options: [{ markers: ["INVARIANT"] }],
+      },
+      {
+        code: "// SAFETY: The caller parsed this value.\nconst value = input as User;",
+        options: [{ markers: ["INVARIANT", "SAFETY"] }],
+      },
+      {
+        code: "// SAFE+: The caller parsed this value.\nconst value = input as User;",
+        options: [{ markers: ["SAFE+"] }],
+      },
+    ],
+    invalid: [
+      {
+        code: "const id = value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "const id = value as unknown as UserId;",
+        errors: [error],
+      },
+      {
+        code: "const id = <UserId>value;",
+        errors: [error],
+      },
+      {
+        code: "const id = value as UserId; // SAFETY: Too late.",
+        errors: [error],
+      },
+      {
+        code: "// This cast seems fine.\nconst id = value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "// SAFETY:\nconst id = value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "const id = /* SAFETY: */ value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "export const id = value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "// UNSAFETY: not a marker.\nconst id = value as UserId;",
+        errors: [error],
+      },
+      {
+        code: "// SAFETY: This marker is not configured.\nconst value = input as User;",
+        options: [{ markers: ["INVARIANT"] }],
+        errors: [
+          {
+            messageId: "missing",
+            data: { marker: "INVARIANT" },
+          },
+        ],
+      },
+    ],
+  },
+);

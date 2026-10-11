@@ -7,7 +7,18 @@ const { recommended, opinionated } = deslopify.configs;
 void it("recommended turns on only this plugin's recommended rules", () => {
   assert.deepEqual(recommended.rules, {
     "deslopify/multiline-object": "error",
+    "deslopify/no-chained-type-assertions": "error",
+    "deslopify/no-conditional-empty-object-spread": "error",
+    "deslopify/no-module-mocking": "error",
     "deslopify/no-property-type-lookup": "error",
+    "deslopify/no-reduce-accumulator-copy": "error",
+    "deslopify/no-reflect-apply": "error",
+    "deslopify/no-reflect-get": "error",
+    "deslopify/no-runtime-typeof": "error",
+    "deslopify/no-unknown-parameters": "error",
+    "deslopify/no-unknown-returns": "error",
+    "deslopify/no-unknown-type-aliases": "error",
+    "deslopify/require-safety-comment-for-type-assertion": "error",
     "deslopify/simple-ternary": "error",
   });
 });

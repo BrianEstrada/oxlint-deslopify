@@ -1,0 +1,66 @@
+import { noUnknownReturns } from "./no-unknown-returns.ts";
+import { ruleTester } from "./rule-tester.ts";
+
+const error = { messageId: "unknown" };
+
+ruleTester.run("no-unknown-returns", noUnknownReturns, {
+  valid: [
+    "function parse(): ImportedValue { return input; }",
+    "function parse(): User { return user; }",
+    "function infer() { return input; }",
+    "function generic<Value>(): Value { return value; }",
+    "type Value = unknown; function generic<Value>(): Value { return value; }",
+    "type Key = unknown; type Mapped<Input> = { [Key in keyof Input]: () => Key };",
+    "function cause(): { cause: unknown } { return { cause: input }; }",
+    "interface Result { value: unknown } function load(): Result { return result; }",
+    "function load(): Promise<User> { return promise; }",
+    "type Identity<T> = T; function load(): Identity<User> { return user; }",
+    "type Value = unknown; function outer() { type Value = User; function load(): Value { return user; } }",
+  ],
+  invalid: [
+    {
+      code: "function load(): unknown { return input; }",
+      errors: [error],
+    },
+    {
+      code: "const load = (): unknown => input;",
+      errors: [error],
+    },
+    {
+      code: "type Loader = () => unknown;",
+      errors: [error],
+    },
+    {
+      code: "interface Loader { load(): unknown }",
+      errors: [error],
+    },
+    {
+      code: "declare function load(): unknown;",
+      errors: [error],
+    },
+    {
+      code: "function load(): string | unknown { return input; }",
+      errors: [error],
+    },
+    {
+      code: "async function load(): Promise<unknown> { return promise; }",
+      errors: [error],
+    },
+    {
+      code: "function load(): UnknownValue { return input; } type UnknownValue = unknown;",
+      errors: [error],
+    },
+    {
+      code: "function outer() { type Result = unknown; function load(): Result { return input; } }",
+      errors: [error],
+    },
+    {
+      code: "type Identity<T> = T; function load(): Identity<unknown> { return input; }",
+      errors: [error],
+    },
+    {
+      code: "type Identity<T> = T; type Wrapped<T> = Promise<Identity<T>>; function load(): Wrapped<unknown> { return promise; }",
+      errors: [error],
+    },
+  ],
+});
