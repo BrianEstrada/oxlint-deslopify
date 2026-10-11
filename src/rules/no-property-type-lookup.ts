@@ -1,5 +1,6 @@
 import type { CreateOnceRule } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { isStringLiteral } from "../utils/string-literal.ts";
 
 // `T[number]` stays allowed: it's how a const tuple becomes a union.
 export const noPropertyTypeLookup: CreateOnceRule = {
@@ -22,18 +23,14 @@ export const noPropertyTypeLookup: CreateOnceRule = {
         const { indexType } = node;
         if (
           indexType.type !== "TSLiteralType" ||
-          indexType.literal.type !== "Literal"
+          !isStringLiteral(indexType.literal)
         ) {
-          return;
-        }
-        const key = indexType.literal.value;
-        if (typeof key !== "string") {
           return;
         }
         context.report({
           node: node,
           messageId: "lookup",
-          data: { key: key },
+          data: { key: indexType.literal.value },
         });
       },
     };

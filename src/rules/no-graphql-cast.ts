@@ -1,5 +1,5 @@
 import type { CreateOnceRule } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
+import { docsUrl } from "../utils/docs-url.ts";
 
 // Octokit's `graphql<T>` only casts the response, and without a type argument
 // it's `any`, which the no-unsafe-* rules only catch once it's used.

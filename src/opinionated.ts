@@ -4,7 +4,7 @@ import { recommended } from "./recommended.ts";
 // Built-in rules against what agents get wrong: `any`, unchecked casts, dead code.
 const slopRules: DummyRuleMap = {
   // Example: `function parse(input: any) {}`
-  // `any` turns type checking off. Take `unknown` and narrow it.
+  // `any` turns type checking off. Write the real type, or parse untrusted input with a schema (e.g. Zod).
   "typescript/no-explicit-any": "error",
   // Example: `const user = { id: 1 } as User`
   // Skips the excess-property check. Write `const user: User = { id: 1 }`.
@@ -15,6 +15,9 @@ const slopRules: DummyRuleMap = {
       objectLiteralTypeAssertions: "never",
     },
   ],
+  // Example: `items.reduce((acc, item) => ({ ...acc, [item.id]: item }), {})`
+  // Copies the accumulator on every step, which is quadratic. Assign into it and return it.
+  "oxc/no-accumulating-spread": "error",
   // Example: `const size = n > 9 ? "lg" : n > 4 ? "md" : "sm"`
   // Fits on one line, so `simple-ternary` allows it. Use if/else or a lookup.
   "no-nested-ternary": "error",
@@ -38,7 +41,7 @@ const slopRules: DummyRuleMap = {
   // Compiles cleanly, and `tsc` never reports it.
   "typescript/no-deprecated": "error",
   // Example: `const user = body as User`, where `body` is `unknown`
-  // Skips validation. Parse it with a schema instead.
+  // Skips validation. Parse it with a schema (e.g. Zod) instead.
   "typescript/no-unsafe-type-assertion": "error",
   // Example: `const user: User = JSON.parse(text)`
   // Lets `any` into a typed variable.
