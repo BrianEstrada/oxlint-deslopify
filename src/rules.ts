@@ -4,6 +4,7 @@ import { noChainedTypeAssertions } from "./rules/no-chained-type-assertions.ts";
 import { noConditionalEmptyObjectSpread } from "./rules/no-conditional-empty-object-spread.ts";
 import { noGraphQLCast } from "./rules/no-graphql-cast.ts";
 import { noModuleMocking } from "./rules/no-module-mocking.ts";
+import { noObjectParameters } from "./rules/no-object-parameters.ts";
 import { noPropertyTypeLookup } from "./rules/no-property-type-lookup.ts";
 import { noReduceAccumulatorCopy } from "./rules/no-reduce-accumulator-copy.ts";
 import { noReflectApply } from "./rules/no-reflect-apply.ts";
@@ -21,6 +22,7 @@ export const rules: Record<string, Rule> = {
   "no-conditional-empty-object-spread": noConditionalEmptyObjectSpread,
   "no-graphql-cast": noGraphQLCast,
   "no-module-mocking": noModuleMocking,
+  "no-object-parameters": noObjectParameters,
   "no-property-type-lookup": noPropertyTypeLookup,
   "no-reduce-accumulator-copy": noReduceAccumulatorCopy,
   "no-reflect-apply": noReflectApply,

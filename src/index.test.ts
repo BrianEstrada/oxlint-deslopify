@@ -11,6 +11,7 @@ void it("recommended turns on this plugin's recommended rules and their built-in
     "deslopify/no-chained-type-assertions": "error",
     "deslopify/no-conditional-empty-object-spread": "error",
     "deslopify/no-module-mocking": "error",
+    "deslopify/no-object-parameters": "error",
     "deslopify/no-property-type-lookup": "error",
     "deslopify/no-reduce-accumulator-copy": "error",
     "deslopify/no-reflect-apply": "error",
