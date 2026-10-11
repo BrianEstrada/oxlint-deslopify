@@ -38,7 +38,8 @@ Before writing or keeping a comment or JSDoc block, walk this:
 
 ## Releasing
 
-- Bump `version` in `package.json` in a `chore(release): vX.Y.Z` commit on `main`, then push a `vX.Y.Z` tag. The Release workflow publishes to npm. Don't run `npm publish` locally.
+- Run the Release workflow from the Actions tab on `main`. It picks the next version from the commits since the last tag (or takes the one you enter), runs `bun run changelog`, commits `chore(release): vX.Y.Z`, tags it, publishes to npm and creates the GitHub Release. Don't bump the version, tag or run `npm publish` by hand.
+- `CHANGELOG.md` is built from commit subjects: `feat`, `fix`, `perf`, `docs` and breaking changes, with everything else skipped. Write them for the package's users. Edit a released entry by hand if it needs more detail; later releases only prepend.
 
 ## PRs
 
