@@ -1,5 +1,6 @@
 import type { CreateOnceRule, ESTree } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { unwrapParentheses } from "../utils/parentheses.ts";
 
 function isEmptyObject(node: ESTree.Expression): boolean {
   return node.type === "ObjectExpression" && node.properties.length === 0;
@@ -26,10 +27,7 @@ export const noConditionalEmptyObjectSpread: CreateOnceRule = {
         if (node.parent.type !== "ObjectExpression") {
           return;
         }
-        let argument = node.argument;
-        while (argument.type === "ParenthesizedExpression") {
-          argument = argument.expression;
-        }
+        const argument = unwrapParentheses(node.argument);
         if (
           argument.type !== "ConditionalExpression" ||
           !(

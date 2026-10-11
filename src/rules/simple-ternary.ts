@@ -1,5 +1,5 @@
 import type { CreateOnceRule } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
+import { docsUrl } from "../utils/docs-url.ts";
 
 export const simpleTernary: CreateOnceRule = {
   meta: {

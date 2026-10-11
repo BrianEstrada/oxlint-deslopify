@@ -1,6 +1,7 @@
 import type { CreateOnceRule } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import { isUnshadowedGlobal, staticMemberName } from "./scope.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { isUnshadowedGlobal } from "../utils/scope.ts";
+import { staticMemberName } from "../utils/member-expression.ts";
 
 export const noReflectApply: CreateOnceRule = {
   meta: {

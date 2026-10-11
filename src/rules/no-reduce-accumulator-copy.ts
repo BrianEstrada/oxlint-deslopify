@@ -4,12 +4,9 @@ import type {
   SourceCode,
   Variable,
 } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import {
-  isUnshadowedGlobal,
-  resolveVariable,
-  staticMemberName,
-} from "./scope.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { isUnshadowedGlobal, resolveVariable } from "../utils/scope.ts";
+import { staticMemberName } from "../utils/member-expression.ts";
 
 const ARRAY_COPY_METHODS = new Set([
   "concat",

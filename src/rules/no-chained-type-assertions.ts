@@ -1,15 +1,8 @@
 import type { CreateOnceRule, ESTree } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import { isConstAssertion, isTypeAssertion } from "./type-assertion.ts";
-import type { TypeAssertion } from "./type-assertion.ts";
-
-function unwrapParentheses(expression: ESTree.Expression): ESTree.Expression {
-  let current = expression;
-  while (current.type === "ParenthesizedExpression") {
-    current = current.expression;
-  }
-  return current;
-}
+import { docsUrl } from "../utils/docs-url.ts";
+import { unwrapParentheses } from "../utils/parentheses.ts";
+import { isConstAssertion, isTypeAssertion } from "../utils/type-assertion.ts";
+import type { TypeAssertion } from "../utils/type-assertion.ts";
 
 // Report a chain once, from its outermost assertion.
 function isOutermost(node: TypeAssertion): boolean {

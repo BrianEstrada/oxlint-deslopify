@@ -1,6 +1,7 @@
 import type { CreateOnceRule, ESTree, SourceCode } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import { resolveVariable, staticMemberName } from "./scope.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { resolveVariable } from "../utils/scope.ts";
+import { staticMemberName } from "../utils/member-expression.ts";
 
 const MOCK_METHODS = new Set(["mock", "doMock", "unstable_mockModule"]);
 

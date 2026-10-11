@@ -1,6 +1,6 @@
 import type { CreateOnceRule } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import { isStringLiteral } from "./string-literal.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { isStringLiteral } from "../utils/string-literal.ts";
 
 // `T[number]` stays allowed: it's how a const tuple becomes a union.
 export const noPropertyTypeLookup: CreateOnceRule = {

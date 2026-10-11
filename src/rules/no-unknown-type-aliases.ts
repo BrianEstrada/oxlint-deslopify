@@ -1,6 +1,6 @@
 import type { CreateOnceRule, ESTree } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
-import { isUnknownOrUnion, resolvedTypeMatches } from "./type-alias.ts";
+import { docsUrl } from "../utils/docs-url.ts";
+import { isUnknownOrUnion, resolvedTypeMatches } from "../utils/type-alias.ts";
 
 export const noUnknownTypeAliases: CreateOnceRule = {
   meta: {

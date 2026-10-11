@@ -1,5 +1,5 @@
 import type { CreateOnceRule, ESTree, SourceCode } from "@oxlint/plugins";
-import { docsUrl } from "./docs-url.ts";
+import { docsUrl } from "../utils/docs-url.ts";
 
 type ParameterOwner =
   | ESTree.ArrowFunctionExpression
@@ -10,7 +10,7 @@ type ParameterOwner =
   | ESTree.TSFunctionType
   | ESTree.TSMethodSignature;
 
-export function containsUnknown(type: ESTree.TSType): boolean {
+function containsUnknown(type: ESTree.TSType): boolean {
   if (type.type === "TSUnknownKeyword") {
     return true;
   }
