@@ -38,7 +38,11 @@ Before writing or keeping a comment or JSDoc block, walk this:
 
 ## Releasing
 
-- Bump `version` in `package.json` in a `chore(release): vX.Y.Z` commit on `main`, then push a `vX.Y.Z` tag. The Release workflow publishes to npm. Don't run `npm publish` locally.
+- Release only when asked. Preview first: `bunx git-cliff --bumped-version` for the version, `bunx git-cliff --unreleased` for the notes.
+- Run `gh workflow run release.yml --ref main` (add `-f version=X.Y.Z` to override the version), then `gh run watch`. The workflow bumps `package.json`, prepends to `CHANGELOG.md`, commits `chore(release): vX.Y.Z`, tags, publishes to npm and creates the GitHub Release.
+- Never do any of those steps by hand: don't edit `version`, run `bun run changelog`, tag, or run `npm publish`.
+- If the run fails after its push step, the tag already exists and a re-run will stop. Report it to the maintainer instead of fixing it by hand.
+- The changelog is built from commit subjects, which are PR titles after a squash merge: `feat`, `fix`, `perf`, `docs` and breaking changes, with the rest skipped. Use those types only for changes the package's users notice, and word the title for them. Editing a released entry in `CHANGELOG.md` by hand is fine; later releases only prepend.
 
 ## PRs
 

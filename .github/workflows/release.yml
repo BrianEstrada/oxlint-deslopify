@@ -1,24 +1,36 @@
-# Publishes to npm when a vX.Y.Z tag is pushed, via npm trusted publishing (OIDC): no npm token.
-# Needs this repo and workflow registered as a trusted publisher on the package's npmjs.com settings.
+# Cuts a release from main: bumps the version, updates CHANGELOG.md, commits and tags it,
+# publishes to npm and creates the GitHub Release. Run it from the Actions tab.
+# npm trusted publishing (OIDC) matches this workflow by file name, so keep it `release.yml`.
 name: Release
 
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, like 0.5.0. Leave empty to work it out from the commits.
+        required: false
+        type: string
 
 permissions:
-  contents: read
+  # Push the release commit and tag, and create the GitHub Release.
+  contents: write
   # OIDC token for npm trusted publishing and provenance.
   id-token: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  publish:
+  release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
-          persist-credentials: false
+          # git-cliff reads every commit and tag since the last release.
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -32,14 +44,60 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Check the tag matches package.json
+      - name: Pick the version
+        id: version
+        env:
+          REQUESTED: ${{ inputs.version }}
         run: |
-          version="$(node -p 'require("./package.json").version')"
-          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
-            echo "Tag $GITHUB_REF_NAME doesn't match package.json version $version" >&2
+          current="$(node -p 'require("./package.json").version')"
+          if [ -n "$REQUESTED" ]; then
+            version="${REQUESTED#v}"
+          else
+            version="$(bunx git-cliff --bumped-version)"
+            version="${version#v}"
+          fi
+          if ! echo "$version" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "\"$version\" isn't a version like 1.2.3" >&2
             exit 1
           fi
+          # git-cliff returns the current version when every commit since it is skipped (deps, chores).
+          if [ "$version" = "$current" ]; then
+            echo "Nothing to release: no feat, fix, perf, docs or breaking commits since v$current" >&2
+            exit 1
+          fi
+          if git rev-parse -q --verify "refs/tags/v$version" > /dev/null; then
+            echo "Tag v$version already exists" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Bump package.json and update CHANGELOG.md
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          bun pm version "$VERSION" --no-git-tag-version
+          bun run changelog
 
       - run: bun run check
 
+      # Atomic, so main and the tag move together or not at all.
+      - name: Commit and tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): v$VERSION"
+          git tag "v$VERSION"
+          git push --atomic origin HEAD:main "v$VERSION"
+
       - run: npm publish
+
+      # The notes are this version's CHANGELOG.md section, without its heading.
+      - name: Create the GitHub Release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          awk '/^## /{ n++; next } n == 1' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          gh release create "v$VERSION" --title "v$VERSION" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
