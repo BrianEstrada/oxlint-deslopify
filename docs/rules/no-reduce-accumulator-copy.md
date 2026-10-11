@@ -8,7 +8,7 @@ Disallow copying the `reduce` accumulator on every step with `Object.assign({}, 
 
 Copying the accumulator on every step makes `reduce` quadratic: the hundredth step copies ninety-nine entries. The accumulator is a fresh value that the callback owns, so mutating it and returning it is safe.
 
-`configs.opinionated` also turns on Oxlint's `oxc/no-accumulating-spread`, which catches `{ ...acc }` and `[...acc]`. This rule catches the copies that rule misses.
+Both presets also turn on Oxlint's `oxc/no-accumulating-spread`, which catches `{ ...acc }` and `[...acc]`. This rule catches the copies that rule misses.
 
 ## Rule details
 

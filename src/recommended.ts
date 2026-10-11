@@ -13,5 +13,10 @@ const recommendedRules: Record<string, AllowWarnDeny> = Object.fromEntries(
 
 export const recommended: OxlintConfig = {
   jsPlugins: ["oxlint-plugin-deslopify"],
-  rules: recommendedRules,
+  rules: {
+    ...recommendedRules,
+    // Example: `items.reduce((acc, item) => ({ ...acc, [item.id]: item }), {})`
+    // The spread half of `no-reduce-accumulator-copy`. Assign into the accumulator and return it.
+    "oxc/no-accumulating-spread": "error",
+  },
 };

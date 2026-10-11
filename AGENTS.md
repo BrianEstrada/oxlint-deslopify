@@ -16,8 +16,8 @@ AGENTS.md strategy: this file is for coding agents, and it's loaded into every s
 - A rule is `src/rules/<name>.ts` exporting a `CreateOnceRule`, plus `<name>.test.ts` beside it using `ruleTester` from `src/rules/rule-tester.ts`, plus `docs/rules/<name>.md`. Register it in `src/rules.ts` and add it to the README's rules table.
 - Put helpers shared between rules (scope lookups, AST guards, `docsUrl`) in `src/utils/`, one topic per file. Keep a helper only one rule uses in that rule's file.
 - Write `createOnce`, not `create`. It runs once per lint run, so keep no per-file state in its closure; reset any in a `before` hook.
-- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to both `configs.recommended` and `configs.opinionated`; keep rules tied to one library or project `false`. Built-in Oxlint rules go only in `configs.opinionated` (`src/opinionated.ts`).
-- Put a two-line comment above every built-in rule in `src/opinionated.ts`: `// Example: <code it flags>`, then `// <what's wrong or what to write instead>`. File it under `slopRules` (catches mistakes) or `tidinessRules` (picks one style).
+- Give every rule `meta.docs` with `description`, `recommended` and `url: docsUrl("<name>")`. `recommended: true` adds it to both `configs.recommended` and `configs.opinionated`; keep rules tied to one library or project `false`. Built-in Oxlint rules go only in `configs.opinionated` (`src/opinionated.ts`), unless one covers the other half of a recommended rule; that one goes in `src/recommended.ts`.
+- Put a two-line comment above every built-in rule in `src/opinionated.ts` and `src/recommended.ts`: `// Example: <code it flags>`, then `// <what's wrong or what to write instead>`. File it under `slopRules` (catches mistakes) or `tidinessRules` (picks one style).
 - This package is public: rule messages and docs must not name any one project's helpers.
 
 ## Comments

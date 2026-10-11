@@ -4,8 +4,9 @@ import deslopify from "./index.ts";
 
 const { recommended, opinionated } = deslopify.configs;
 
-void it("recommended turns on only this plugin's recommended rules", () => {
+void it("recommended turns on this plugin's recommended rules and their built-in partner", () => {
   assert.deepEqual(recommended.rules, {
+    "oxc/no-accumulating-spread": "error",
     "deslopify/multiline-object": "error",
     "deslopify/no-chained-type-assertions": "error",
     "deslopify/no-conditional-empty-object-spread": "error",

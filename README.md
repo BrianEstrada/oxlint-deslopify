@@ -2,7 +2,7 @@
 
 [Oxlint](https://oxc.rs/docs/guide/usage/linter) rules that keep AI agents from writing sloppy code.
 
-Agents follow a linter more reliably than a style guide in a prompt. This plugin turns the patterns they reach for (multi-line ternaries, one-line objects, `T["key"]` type lookups, unchecked casts) into lint errors. It ships two presets: `recommended` turns on just this plugin's rules, and `opinionated` adds Oxlint built-in rules that push the same style further.
+Agents follow a linter more reliably than a style guide in a prompt. This plugin turns the patterns they reach for (multi-line ternaries, one-line objects, `T["key"]` type lookups, unchecked casts) into lint errors. It ships two presets: `recommended` turns on this plugin's rules, and `opinionated` adds Oxlint built-in rules that push the same style further.
 
 ## Install
 
@@ -16,7 +16,7 @@ bun add -d oxlint-tsgolint
 
 Extend a preset in `oxlint.config.ts`.
 
-`configs.recommended` turns on this plugin's ✅ rules and nothing else:
+`configs.recommended` turns on this plugin's ✅ rules, plus Oxlint's `oxc/no-accumulating-spread`, the spread half of `no-reduce-accumulator-copy`:
 
 ```ts
 import { defineConfig } from "oxlint";
@@ -87,7 +87,6 @@ Rules against what agents get wrong: `any`, unchecked casts, dead code.
 | --------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | `typescript/no-explicit-any`            |                                      | `any` turns type checking off. Write the real type, or parse untrusted input with a schema (e.g. Zod). |
 | `typescript/consistent-type-assertions` | `objectLiteralTypeAssertions: never` | `{ ... } as T` skips the excess-property check. Write `const x: T = { ... }`.                          |
-| `oxc/no-accumulating-spread`            |                                      | `{ ...acc }` in `reduce` copies the accumulator every step, which is quadratic.                        |
 | `no-nested-ternary`                     |                                      | Catches the one-line `a ? b : c ? d : e` that `simple-ternary` allows.                                 |
 | `no-unused-vars`                        | `args`, `caughtErrors: all`          | Unused parameters and swallowed errors, unless prefixed with `_`.                                      |
 | `typescript/no-deprecated`              | type-aware                           | Flags `@deprecated` APIs, which `tsc` never reports.                                                   |

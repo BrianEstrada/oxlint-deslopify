@@ -15,9 +15,6 @@ const slopRules: DummyRuleMap = {
       objectLiteralTypeAssertions: "never",
     },
   ],
-  // Example: `items.reduce((acc, item) => ({ ...acc, [item.id]: item }), {})`
-  // Copies the accumulator on every step, which is quadratic. Assign into it and return it.
-  "oxc/no-accumulating-spread": "error",
   // Example: `const size = n > 9 ? "lg" : n > 4 ? "md" : "sm"`
   // Fits on one line, so `simple-ternary` allows it. Use if/else or a lookup.
   "no-nested-ternary": "error",
